@@ -1,0 +1,6 @@
+stages:
+- stage: Angular
+  jobs:
+  - job: angularinstall
+    steps:
+    - script: echo "npm install angular"

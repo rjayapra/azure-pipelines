@@ -1,0 +1,13 @@
+parameters:
+- name: name  # defaults for any parameters that aren't specified
+  default: ''
+- name: vmImage
+  default: ''
+
+jobs:
+- job: ${{ parameters.name }}
+  pool: 
+    vmImage: ${{ parameters.vmImage }}
+  steps:
+  - script: echo "First Step. Env :" $(Agent.OS) 
+  - script: echo "Step Two. Env :" $(Agent.Name) 

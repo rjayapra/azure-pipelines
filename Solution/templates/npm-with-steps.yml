@@ -1,0 +1,4 @@
+steps:
+- script: echo "Test one"
+- script: echo "Test Two"
+- script: echo "Test Three"

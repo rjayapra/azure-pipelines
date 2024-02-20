@@ -1,0 +1,6 @@
+stages:
+- stage: Build
+  jobs:
+  - job: build
+    steps:
+    - script: echo "npm run build"

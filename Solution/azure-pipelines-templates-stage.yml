@@ -1,0 +1,20 @@
+trigger:
+- main
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+stages:
+- stage: Install
+  jobs: 
+  - job: npminstall
+    steps:
+    - task: Npm@1
+      inputs:
+        command: 'install'
+  - template: templates/npm-with-params.yml  # Template reference
+    parameters:
+      name: Linux
+      vmImage: 'ubuntu-latest'
+- template: templates/stages1.yml # Template reference
+- template: templates/stages2.yml # Template reference

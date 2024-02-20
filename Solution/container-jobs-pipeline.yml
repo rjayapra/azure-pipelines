@@ -1,0 +1,47 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+- main
+
+pool:
+  vmImage: ubuntu-latest
+
+resources:
+  containers:
+  - container: u16
+    image: ubuntu:16.04
+
+  - container: u18
+    image: ubuntu:18.04
+
+  - container: u20
+    image: ubuntu:20.04
+
+jobs:
+- job: Delay
+  pool: server
+  steps:
+  - task: Delay@1
+    inputs:
+      delayForMinutes: '2'
+
+- job: RunInContainer
+  pool:
+    vmImage: 'ubuntu-latest'
+
+  strategy:
+    matrix:
+      ubuntu16:
+        containerResource: u16
+      ubuntu18:
+        containerResource: u18
+      ubuntu20:
+        containerResource: u20
+
+  container: $[ variables['containerResource'] ]
+
+  steps:  
+    - script: printenv

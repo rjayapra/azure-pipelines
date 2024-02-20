@@ -1,0 +1,54 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+- main
+
+pool:
+  vmImage: ubuntu-latest
+
+variables: 
+- group: 'my-var-group' # variable group
+- name: 'devopsAccount' # new variable defined in YAML
+  value: 'rjayaprakash0246'
+- name: 'projectName' # new variable defined in YAML
+  value: 'Pipelines'
+
+steps:
+- task: PowerShell@2
+  env:
+    MY_MAPPED_TOKEN: $(token) 
+    # Maps the secret variable $(token) from my-var-group
+  inputs:
+    targetType: 'inline'
+    script: |
+      echo "Running the powershell script"
+      Write-Host "Running the AZDO REST API to get release info"
+      # Encode the Personal Access Token (PAT)
+      # $env:USER is a normal variable in the variable group
+      # $env:MY_MAPPED_TOKEN is a mapped secret variable
+      #$base64AuthInfo = [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes(("{0}:{1}" -f $(user), $env:MY_MAPPED_TOKEN)))
+      
+      # Get a list of releases
+      $uri = "https://dev.azure.com/$(devopsAccount)/$(projectName)/_apis/release/releases?api-version=7.1"
+      Write-Host "URL:" $uri
+      # Invoke the REST call
+      #$result = Invoke-RestMethod -Uri $uri -Method Get -ContentType "application/json" -Headers @{Authorization=("Basic {0}" -f $base64AuthInfo)}
+      
+      # Output releases in JSON
+      #Write-Host $result.value
+- task: Bash@3
+  inputs:
+    targetType: 'inline'
+    script: |
+      # Write your commands here
+      
+      echo "System.DefaultWorkingDirectory" : $(System.DefaultWorkingDirectory)
+      echo "Build Id " : $(Build.BuildId)
+      echo "Build.SourcesDirectory" : $(Build.SourcesDirectory)
+      
+      echo "Agent.Name" : $(Agent.Name)
+
+  
